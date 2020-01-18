@@ -1,35 +1,39 @@
---- pytz/__init__.py.orig	2012-09-14 08:22:53.072928561 -0500
-+++ pytz/__init__.py	2012-09-14 08:28:48.981920622 -0500
-@@ -80,24 +80,19 @@
+diff -up pytz-2016.10/pytz/__init__.py.zoneinfo pytz-2016.10/pytz/__init__.py
+--- pytz-2016.10/pytz/__init__.py.zoneinfo	2016-12-06 02:55:39.000000000 -0700
++++ pytz-2016.10/pytz/__init__.py	2016-12-06 09:58:49.983107114 -0700
+@@ -70,6 +70,10 @@ else: # Python 2.x
          """
-         return s.encode('US-ASCII')
+         return s.encode('ASCII')
  
 +_tzinfo_dir = os.getenv("TZDIR") or "/usr/share/zoneinfo"
 +if _tzinfo_dir.endswith(os.sep):
 +    _tzinfo_dir = _tzinfo_dir[:-1]
++
  
  def open_resource(name):
      """Open a resource from the zoneinfo subdir for reading.
- 
--    Uses the pkg_resources module if available and no standard file
--    found at the calculated location.
-     """
-     name_parts = name.lstrip('/').split('/')
+@@ -81,19 +85,8 @@ def open_resource(name):
      for part in name_parts:
          if part == os.path.pardir or os.path.sep in part:
              raise ValueError('Bad path segment: %r' % part)
 -    filename = os.path.join(os.path.dirname(__file__),
 -                            'zoneinfo', *name_parts)
--    if not os.path.exists(filename) and resource_stream is not None:
+-    if not os.path.exists(filename):
 -        # http://bugs.launchpad.net/bugs/383171 - we avoid using this
 -        # unless absolutely necessary to help when a broken version of
 -        # pkg_resources is installed.
--        return resource_stream(__name__, 'zoneinfo/' + name)
+-        try:
+-            from pkg_resources import resource_stream
+-        except ImportError:
+-            resource_stream = None
+ 
+-        if resource_stream is not None:
+-            return resource_stream(__name__, 'zoneinfo/' + name)
 +    filename = os.path.join(_tzinfo_dir, *name_parts)
      return open(filename, 'rb')
  
  
-@@ -520,1018 +515,31 @@
+@@ -490,1044 +483,34 @@ def _test():
  if __name__ == '__main__':
      _test()
  
@@ -145,6 +149,7 @@
 - 'America/Eirunepe',
 - 'America/El_Salvador',
 - 'America/Ensenada',
+- 'America/Fort_Nelson',
 - 'America/Fort_Wayne',
 - 'America/Fortaleza',
 - 'America/Glace_Bay',
@@ -262,6 +267,7 @@
 - 'Antarctica/Rothera',
 - 'Antarctica/South_Pole',
 - 'Antarctica/Syowa',
+- 'Antarctica/Troll',
 - 'Antarctica/Vostok',
 - 'Arctic/Longyearbyen',
 - 'Asia/Aden',
@@ -272,14 +278,17 @@
 - 'Asia/Aqtobe',
 - 'Asia/Ashgabat',
 - 'Asia/Ashkhabad',
+- 'Asia/Atyrau',
 - 'Asia/Baghdad',
 - 'Asia/Bahrain',
 - 'Asia/Baku',
 - 'Asia/Bangkok',
+- 'Asia/Barnaul',
 - 'Asia/Beirut',
 - 'Asia/Bishkek',
 - 'Asia/Brunei',
 - 'Asia/Calcutta',
+- 'Asia/Chita',
 - 'Asia/Choibalsan',
 - 'Asia/Chongqing',
 - 'Asia/Chungking',
@@ -290,6 +299,7 @@
 - 'Asia/Dili',
 - 'Asia/Dubai',
 - 'Asia/Dushanbe',
+- 'Asia/Famagusta',
 - 'Asia/Gaza',
 - 'Asia/Harbin',
 - 'Asia/Hebron',
@@ -307,6 +317,7 @@
 - 'Asia/Kashgar',
 - 'Asia/Kathmandu',
 - 'Asia/Katmandu',
+- 'Asia/Khandyga',
 - 'Asia/Kolkata',
 - 'Asia/Krasnoyarsk',
 - 'Asia/Kuala_Lumpur',
@@ -336,6 +347,7 @@
 - 'Asia/Seoul',
 - 'Asia/Shanghai',
 - 'Asia/Singapore',
+- 'Asia/Srednekolymsk',
 - 'Asia/Taipei',
 - 'Asia/Tashkent',
 - 'Asia/Tbilisi',
@@ -344,13 +356,16 @@
 - 'Asia/Thimbu',
 - 'Asia/Thimphu',
 - 'Asia/Tokyo',
+- 'Asia/Tomsk',
 - 'Asia/Ujung_Pandang',
 - 'Asia/Ulaanbaatar',
 - 'Asia/Ulan_Bator',
 - 'Asia/Urumqi',
+- 'Asia/Ust-Nera',
 - 'Asia/Vientiane',
 - 'Asia/Vladivostok',
 - 'Asia/Yakutsk',
+- 'Asia/Yangon',
 - 'Asia/Yekaterinburg',
 - 'Asia/Yerevan',
 - 'Atlantic/Azores',
@@ -448,6 +463,7 @@
 - 'Etc/Zulu',
 - 'Europe/Amsterdam',
 - 'Europe/Andorra',
+- 'Europe/Astrakhan',
 - 'Europe/Athens',
 - 'Europe/Belfast',
 - 'Europe/Belgrade',
@@ -456,6 +472,7 @@
 - 'Europe/Brussels',
 - 'Europe/Bucharest',
 - 'Europe/Budapest',
+- 'Europe/Busingen',
 - 'Europe/Chisinau',
 - 'Europe/Copenhagen',
 - 'Europe/Dublin',
@@ -467,6 +484,7 @@
 - 'Europe/Jersey',
 - 'Europe/Kaliningrad',
 - 'Europe/Kiev',
+- 'Europe/Kirov',
 - 'Europe/Lisbon',
 - 'Europe/Ljubljana',
 - 'Europe/London',
@@ -487,6 +505,7 @@
 - 'Europe/Samara',
 - 'Europe/San_Marino',
 - 'Europe/Sarajevo',
+- 'Europe/Saratov',
 - 'Europe/Simferopol',
 - 'Europe/Skopje',
 - 'Europe/Sofia',
@@ -494,6 +513,7 @@
 - 'Europe/Tallinn',
 - 'Europe/Tirane',
 - 'Europe/Tiraspol',
+- 'Europe/Ulyanovsk',
 - 'Europe/Uzhgorod',
 - 'Europe/Vaduz',
 - 'Europe/Vatican',
@@ -544,6 +564,7 @@
 - 'PST8PDT',
 - 'Pacific/Apia',
 - 'Pacific/Auckland',
+- 'Pacific/Bougainville',
 - 'Pacific/Chatham',
 - 'Pacific/Chuuk',
 - 'Pacific/Easter',
@@ -609,21 +630,21 @@
 - 'W-SU',
 - 'WET',
 - 'Zulu']
--all_timezones = [
--        tz for tz in all_timezones if resource_exists(tz)]
 +all_timezones = []
 +for root, dirs, files in os.walk(_tzinfo_dir):
-+    for exclude in "posix", "right":
++    for exclude in 'posix', 'right':
 +        if exclude in dirs:
 +            del dirs[dirs.index(exclude)]
 +
-+    all_timezones.extend(os.path.join(root, file)[len(_tzinfo_dir)+1:]
-+                         for file in files
-+                         if file != "README" and file != "Theory"
-+                         and "." not in file)
-+all_timezones.sort()
-         
- all_timezones_set = set(all_timezones)
++    all_timezones.extend(os.path.join(root, tz_file)[len(_tzinfo_dir)+1:]
++                         for tz_file in files
++                         if tz_file != 'README' and tz_file != 'Theory'
++                         and '.' not in tz_file)
+ all_timezones = LazyList(
+         tz for tz in all_timezones if resource_exists(tz))
+-        
++
+ all_timezones_set = LazySet(all_timezones)
 -common_timezones = \
 -['Africa/Abidjan',
 - 'Africa/Accra',
@@ -727,6 +748,7 @@
 - 'America/Edmonton',
 - 'America/Eirunepe',
 - 'America/El_Salvador',
+- 'America/Fort_Nelson',
 - 'America/Fortaleza',
 - 'America/Glace_Bay',
 - 'America/Godthab',
@@ -774,7 +796,6 @@
 - 'America/Moncton',
 - 'America/Monterrey',
 - 'America/Montevideo',
-- 'America/Montreal',
 - 'America/Montserrat',
 - 'America/Nassau',
 - 'America/New_York',
@@ -799,13 +820,11 @@
 - 'America/Regina',
 - 'America/Resolute',
 - 'America/Rio_Branco',
-- 'America/Santa_Isabel',
 - 'America/Santarem',
 - 'America/Santiago',
 - 'America/Santo_Domingo',
 - 'America/Sao_Paulo',
 - 'America/Scoresbysund',
-- 'America/Shiprock',
 - 'America/Sitka',
 - 'America/St_Barthelemy',
 - 'America/St_Johns',
@@ -833,8 +852,8 @@
 - 'Antarctica/McMurdo',
 - 'Antarctica/Palmer',
 - 'Antarctica/Rothera',
-- 'Antarctica/South_Pole',
 - 'Antarctica/Syowa',
+- 'Antarctica/Troll',
 - 'Antarctica/Vostok',
 - 'Arctic/Longyearbyen',
 - 'Asia/Aden',
@@ -844,23 +863,25 @@
 - 'Asia/Aqtau',
 - 'Asia/Aqtobe',
 - 'Asia/Ashgabat',
+- 'Asia/Atyrau',
 - 'Asia/Baghdad',
 - 'Asia/Bahrain',
 - 'Asia/Baku',
 - 'Asia/Bangkok',
+- 'Asia/Barnaul',
 - 'Asia/Beirut',
 - 'Asia/Bishkek',
 - 'Asia/Brunei',
+- 'Asia/Chita',
 - 'Asia/Choibalsan',
-- 'Asia/Chongqing',
 - 'Asia/Colombo',
 - 'Asia/Damascus',
 - 'Asia/Dhaka',
 - 'Asia/Dili',
 - 'Asia/Dubai',
 - 'Asia/Dushanbe',
+- 'Asia/Famagusta',
 - 'Asia/Gaza',
-- 'Asia/Harbin',
 - 'Asia/Hebron',
 - 'Asia/Ho_Chi_Minh',
 - 'Asia/Hong_Kong',
@@ -872,8 +893,8 @@
 - 'Asia/Kabul',
 - 'Asia/Kamchatka',
 - 'Asia/Karachi',
-- 'Asia/Kashgar',
 - 'Asia/Kathmandu',
+- 'Asia/Khandyga',
 - 'Asia/Kolkata',
 - 'Asia/Krasnoyarsk',
 - 'Asia/Kuala_Lumpur',
@@ -894,24 +915,27 @@
 - 'Asia/Pyongyang',
 - 'Asia/Qatar',
 - 'Asia/Qyzylorda',
-- 'Asia/Rangoon',
 - 'Asia/Riyadh',
 - 'Asia/Sakhalin',
 - 'Asia/Samarkand',
 - 'Asia/Seoul',
 - 'Asia/Shanghai',
 - 'Asia/Singapore',
+- 'Asia/Srednekolymsk',
 - 'Asia/Taipei',
 - 'Asia/Tashkent',
 - 'Asia/Tbilisi',
 - 'Asia/Tehran',
 - 'Asia/Thimphu',
 - 'Asia/Tokyo',
+- 'Asia/Tomsk',
 - 'Asia/Ulaanbaatar',
 - 'Asia/Urumqi',
+- 'Asia/Ust-Nera',
 - 'Asia/Vientiane',
 - 'Asia/Vladivostok',
 - 'Asia/Yakutsk',
+- 'Asia/Yangon',
 - 'Asia/Yekaterinburg',
 - 'Asia/Yerevan',
 - 'Atlantic/Azores',
@@ -944,6 +968,7 @@
 - 'Canada/Pacific',
 - 'Europe/Amsterdam',
 - 'Europe/Andorra',
+- 'Europe/Astrakhan',
 - 'Europe/Athens',
 - 'Europe/Belgrade',
 - 'Europe/Berlin',
@@ -951,6 +976,7 @@
 - 'Europe/Brussels',
 - 'Europe/Bucharest',
 - 'Europe/Budapest',
+- 'Europe/Busingen',
 - 'Europe/Chisinau',
 - 'Europe/Copenhagen',
 - 'Europe/Dublin',
@@ -962,6 +988,7 @@
 - 'Europe/Jersey',
 - 'Europe/Kaliningrad',
 - 'Europe/Kiev',
+- 'Europe/Kirov',
 - 'Europe/Lisbon',
 - 'Europe/Ljubljana',
 - 'Europe/London',
@@ -981,12 +1008,14 @@
 - 'Europe/Samara',
 - 'Europe/San_Marino',
 - 'Europe/Sarajevo',
+- 'Europe/Saratov',
 - 'Europe/Simferopol',
 - 'Europe/Skopje',
 - 'Europe/Sofia',
 - 'Europe/Stockholm',
 - 'Europe/Tallinn',
 - 'Europe/Tirane',
+- 'Europe/Ulyanovsk',
 - 'Europe/Uzhgorod',
 - 'Europe/Vaduz',
 - 'Europe/Vatican',
@@ -1011,6 +1040,7 @@
 - 'Indian/Reunion',
 - 'Pacific/Apia',
 - 'Pacific/Auckland',
+- 'Pacific/Bougainville',
 - 'Pacific/Chatham',
 - 'Pacific/Chuuk',
 - 'Pacific/Easter',
@@ -1055,14 +1085,11 @@
 - 'US/Mountain',
 - 'US/Pacific',
 - 'UTC']
--common_timezones = [
--        tz for tz in common_timezones if tz in all_timezones]
--        
-+
 +common_timezones = [l.split()[2]
-+                    for l in open(os.path.join(_tzinfo_dir, "zone.tab"))
-+                    if l != "" and l[0] != "#"]\
-+  + ['GMT',
++                    for l in open(os.path.join(_tzinfo_dir, 'zone.tab'))
++                    if l != '' and l[0] != '#']
++common_timezones.extend(
++    ['GMT',
 +     'US/Alaska',
 +     'US/Arizona',
 +     'US/Central',
@@ -1070,6 +1097,9 @@
 +     'US/Hawaii',
 +     'US/Mountain',
 +     'US/Pacific',
-+     'UTC']
-+common_timezones.sort()        
- common_timezones_set = set(common_timezones)
++     'UTC'])
+ common_timezones = LazyList(
+             tz for tz in common_timezones if tz in all_timezones)
+-        
++
+ common_timezones_set = LazySet(common_timezones)

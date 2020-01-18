@@ -5,26 +5,33 @@
 %endif
 
 Name:           pytz
-Version:        2012d
-Release:        5%{?dist}
+Version:        2016.10
+Release:        2%{?dist}
 Summary:        World Timezone Definitions for Python
 
 Group:          Development/Languages
 License:        MIT
 URL:            http://pytz.sourceforge.net/
-Source0:        http://pypi.python.org/packages/source/p/%{name}/%{name}-%{version}.tar.gz
-Patch0:         pytz-2012d_zoneinfo.patch
+Source0:        https://files.pythonhosted.org/packages/source/p/%{name}/%{name}-%{version}.tar.gz
+# Patch to use the system supplied zoneinfo files
+Patch0:         pytz-2016.10_zoneinfo.patch
+# Fix the test suite for the 2017a tz abbreviation changes
+# Fixed upstream: https://git.launchpad.net/pytz/commit/?id=c00dbe290bd1aa896b01db94f2e93449cf3bfd07
+Patch1:			fix-tests-for-2017a-tz-abbreviation-changes.patch
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 BuildArch:      noarch
 BuildRequires:  python2-devel
+BuildRequires:  pytest
 
 %if 0%{?with_python3}
 BuildRequires:  python3-devel
 %endif
 
 Requires: tzdata
+Provides: python-pytz = %{version}-%{release}
+Provides: python2-pytz = %{version}-%{release}
 
 %description
 pytz brings the Olson tz database into Python. This library allows accurate
@@ -53,7 +60,8 @@ Amost all (over 540) of the Olson timezones are supported.
 
 %prep
 %setup -q
-%patch0 -p0
+%patch0 -p1
+%patch1 -p1
 
 %if 0%{?with_python3}
 cp -a . %{py3dir}
@@ -84,6 +92,8 @@ popd
 %clean
 rm -rf $RPM_BUILD_ROOT
 
+%check
+PYTHONPATH=%{buildroot}%{python2_sitelib} py.test-%{python2_version} -v
 
 %files
 %defattr(-,root,root,-)
@@ -100,6 +110,14 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Mon Apr 03 2017 Charalampos Stratakis <cstratak@redhat.com> - 2016.10-2
+- Fix the test suite for the 2017a tz abbreviation changes
+Resolves: rhbz#1433851
+
+* Mon Feb 06 2017 Charalampos Stratakis <cstratak@redhat.com> - 2016.10-1
+- Update to 2016.10
+Resolves: rhbz#1374871
+
 * Fri Dec 27 2013 Daniel Mach <dmach@redhat.com> - 2012d-5
 - Mass rebuild 2013-12-27
 
