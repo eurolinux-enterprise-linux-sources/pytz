@@ -6,7 +6,7 @@
 
 Name:           pytz
 Version:        2012d
-Release:        4%{?dist}
+Release:        5%{?dist}
 Summary:        World Timezone Definitions for Python
 
 Group:          Development/Languages
@@ -100,6 +100,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Fri Dec 27 2013 Daniel Mach <dmach@redhat.com> - 2012d-5
+- Mass rebuild 2013-12-27
+
 * Thu Feb 14 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2012d-4
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_19_Mass_Rebuild
 
